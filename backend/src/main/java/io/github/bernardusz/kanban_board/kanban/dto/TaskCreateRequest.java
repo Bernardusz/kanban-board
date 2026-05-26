@@ -1,3 +1,9 @@
 package io.github.bernardusz.kanban_board.kanban.dto;
 
-public class TaskCreateRequest {}
+import io.github.bernardusz.kanban_board.kanban.TaskStatus;
+
+public record TaskCreateRequest (
+  String title,
+  String description,
+  TaskStatus status
+){}
