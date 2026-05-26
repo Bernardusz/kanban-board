@@ -1,3 +1,12 @@
 package io.github.bernardusz.kanban_board.kanban;
 
-public class Task {}
+import java.time.LocalDateTime;
+
+public record Task(
+  Long id,
+  String title,
+  String description,
+  TaskStatus status,
+  LocalDateTime createdAt,
+  LocalDateTime updatedAt
+) {}
