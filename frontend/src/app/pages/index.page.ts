@@ -3,17 +3,19 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-home',
   template: `
-    <h2>Analog</h2>
+    <div class="flex flex-col align-center justify-center">
+		<h1>Analog</h1>
 
-    <h3>The fullstack meta-framework for Angular!</h3>
+    	<h3>The fullstack meta-framework for Angular!</h3>
 
-    <p class="read-the-docs">
-      <a href="https://analogjs.org" target="_blank">Docs</a> |
-      <a href="https://github.com/analogjs/analog" target="_blank">GitHub</a> |
-      <a href="https://github.com/sponsors/brandonroberts" target="_blank">
-        Sponsor
-      </a>
-    </p>
+		<p class="read-the-docs">
+			<a href="https://analogjs.org" target="_blank">Docs</a> |
+			<a href="https://github.com/analogjs/analog" target="_blank">GitHub</a> |
+			<a href="https://github.com/sponsors/brandonroberts" target="_blank">
+				Sponsor
+			</a>
+		</p>
+	</div>
   `,
   styles: `
     :host {

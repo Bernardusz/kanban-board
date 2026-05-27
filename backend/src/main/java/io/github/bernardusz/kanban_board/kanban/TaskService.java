@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TaskService {
@@ -14,28 +15,28 @@ public class TaskService {
     this.taskRepository = taskRepository;
   }
 
-  @Transactional
+  @Transactional(readOnly = true)
   public List<TaskSummary> findAll() {
     return taskRepository.findAll();
   }
 
-  @Transactional
-  public Task findById(long id) {
+  @Transactional(readOnly = true)
+  public Optional<Task> findById(Long id) {
     return taskRepository.findById(id);
   }
 
   @Transactional
-  public void createTask (TaskCreateRequest newTask) {
-    taskRepository.create(newTask);
+  public Optional<Long> createTask (TaskCreateRequest newTask) {
+    return taskRepository.create(newTask);
   }
 
   @Transactional
-  public void updateTask(Task task) {
-    taskRepository.update(task);
+  public void updateTask(Task task, Long id) {
+    taskRepository.update(task, id);
   }
 
   @Transactional
-  public void deleteTask(long id) {
+  public void deleteTask(Long id) {
     taskRepository.delete(id);
   }
 }
