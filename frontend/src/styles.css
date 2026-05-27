@@ -1,15 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @import 'tailwindcss';
-
 /* You can add global styles to this file, and also import other style files */
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--font-main: "Inter";
+	--color-primary: var(--primary);
+	--color-secondary: var(--secondary);
+	--color-tertiary: var(--tertiary);
+}
+
 :root {
-  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
   font-size: 16px;
   line-height: 24px;
-  font-weight: 400;
-
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  --background: #f8fafc;
+  --foreground: #080d12;
+  --foreground-secondary: #101923;
+  --foreground-tertiary: #182534;
+
+
+  --primary: #2563EB;
+  --secondary: #475569;
+  --tertiary: #BC4800;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -18,64 +34,57 @@
   -webkit-text-size-adjust: 100%;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+.dark {
+  --background: #030507;
+  --foreground: #edf2f7;
+  --foreground-secondary: #dce6ef;
+  --foreground-tertiary: #cbdae7;
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+@layer base {
+    * {
+        @apply border-border outline-ring/50 font-main;
+    }
+    body {
+        @apply bg-background text-foreground;
+    }
+    h1 {
+        @apply text-4xl font-bold;
+    }
+    h2 {
+        @apply text-2xl font-bold;
+    }
+    h3 {
+        @apply text-xl font-semibold;
+    }
+    h4 {
+        @apply text-lg font-semibold;
+    }
+    p {
+        @apply text-base font-normal text-accent-foreground;
+    }
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-.card {
-  padding: 2em;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
-
-.analog-markdown p {
-  text-align: left;
+@layer components {
+    .page {
+        @apply flex h-fit w-full xl:overflow-visible overflow-hidden flex-col items-center justify-center pt-4 xl:pt-10 gap-8;
+    }
+    .p-deemphasize {
+        @apply text-muted-foreground text-sm font-normal;
+    }
+    .link-primary {
+        @apply text-primary hover:text-primary/90 font-medium;
+    }
+    .btn-primary {
+        @apply min-h-8 min-w-24 hover:scale-105 transition-transform duration-300;
+    }
+    .section {
+        @apply max-w-400 px-8 py-12 md:px-12 md:py-16 relative w-full;
+    }
+    .hover-transform {
+        @apply transition-transform duration-300 hover:shadow-2xl motion-safe:hover:scale-105;
+    }
+    .link-btn {
+        @apply bg-primary text-primary-foreground hover:bg-primary/90 min-h-8 min-w-16 hover:scale-105 transition-transform duration-300 h-9 px-4 py-2 has-[>svg]:px-3;
+    }
 }
