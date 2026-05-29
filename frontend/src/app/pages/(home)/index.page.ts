@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import {
 	CdkDragDrop,
 	CdkDropListGroup,
@@ -7,19 +7,71 @@ import {
 	moveItemInArray,
 	transferArrayItem,
 } from '@angular/cdk/drag-drop';
-
-interface Task {
-  id: number;
-  title: string;
-  status: 'TODO' | 'IN_PROGRESS' | 'DONE';
-}
+import { injectLoad } from '@analogjs/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { load, Task } from '@/app/pages/(home)/index.server';
+import { KanbanService } from '@/app/pages/(home)/index.service';
+import TaskContainer from '@/components/task-container.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CdkDropListGroup, CdkDropList, CdkDrag],
+  imports: [CdkDropListGroup, TaskContainer],
   templateUrl: './index.page.html',
 })
 export default class Home {
-	
+	private loader = toSignal(injectLoad<typeof load>(), {requireSync: true});
+	private kanbanService = inject(KanbanService);
+
+	constructor() {
+		const tasks = this.loader().tasks ?? [];
+		this.kanbanService.initializeData(tasks);
+	}
+
+	tasksSignal = computed(() => {
+		return this.kanbanService.localTasks() ?? this.loader().tasks ?? [];
+	});
+
+	todoTasks = computed(() => {
+		return this.tasksSignal().filter((task) => task.status === 'TODO');
+	});
+	inProgressTasks = computed(() => {
+		return this.tasksSignal().filter((task) => task.status === 'IN_PROGRESS');
+	});
+	reviewTasks = computed(() => {
+		return this.tasksSignal().filter((task) => task.status === 'REVIEW');
+	});
+	doneTasks = computed(() => {
+		return this.tasksSignal().filter((task) => task.status === 'DONE');
+	});
+
+	isModalOpen = signal(false);
+
+    openCreateModal() {
+        this.isModalOpen.set(true);
+    }
+
+    closeCreateModal() {
+        this.isModalOpen.set(false);
+    }
+
+	onCardDropped(event: CdkDragDrop<any[]>) {
+		const movedTask = event.previousContainer.data[event.previousIndex];
+        const targetStatus = event.container.id as Task['status'];
+
+		if (!movedTask) return;
+
+		this.kanbanService.updateTask(
+			movedTask.id, targetStatus, event.previousIndex, event.currentIndex, event.previousContainer.id === event.container.id
+		)
+  	}
+
+	triggerCreateTask(title: string){
+		this.kanbanService.createTask(title);
+		this.closeCreateModal();
+	}
+
+	triggerDeleteTask(taskId: number){
+		this.kanbanService.deleteTask(taskId);
+	}
 }

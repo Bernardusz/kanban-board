@@ -1,3 +1,35 @@
-<main class="page">
-	<h1>Home</h1>
+<main class="page p-8">
+	<section
+		cdkDropListGroup
+		class="section border-primary border w-full min-h-screen rounded-2xl gap-12 flex flex-col"
+	>
+		<task-container
+			title="To Do"
+			id="TODO"
+			[tasks]="todoTasks()"
+			[isAddTaskAllowed]="true"
+			(dropped)="onCardDropped($event)"
+		/>
+		<task-container
+			title="In Progress"
+			id="IN_PROGRESS"
+			[tasks]="inProgressTasks()"
+			[isAddTaskAllowed]="false"
+			(dropped)="onCardDropped($event)"
+		/>
+		<task-container
+			title="To Review"
+			id="REVIEW"
+			[tasks]="reviewTasks()"
+			[isAddTaskAllowed]="false"
+			(dropped)="onCardDropped($event)"
+		/>
+		<task-container
+			title="Finished"
+			id="DONE"
+			[tasks]="doneTasks()"
+			[isAddTaskAllowed]="false"
+			(dropped)="onCardDropped($event)"
+		/>
+	</section>
 </main>
