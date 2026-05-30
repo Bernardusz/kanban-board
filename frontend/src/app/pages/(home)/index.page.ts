@@ -84,11 +84,6 @@ export default class Home {
 		)
   	}
 
-	triggerCreateTask(title: string){
-		this.kanbanService.createTask(title);
-		this.closeCreateModal();
-	}
-
 	triggerDeleteTask(taskId: number){
 		this.kanbanService.deleteTask(taskId);
 	}

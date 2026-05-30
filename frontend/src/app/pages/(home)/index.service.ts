@@ -18,7 +18,7 @@ export class KanbanService {
   // Public signal for your component to read
   localTasks = this._localTasks.asReadonly();
 
-  private statusUpdateStream = new Subject<{ taskId: number; title: string; newStatus: Task['status'], description: string }>();
+  private statusUpdateStream = new Subject<{}>();
 
   constructor () {
 	this.initializeDebouncedStream();
@@ -32,18 +32,24 @@ export class KanbanService {
 
       // 🚀 Switch to the network call once silence is achieved
       switchMap((update) => {
-        console.log(`[Debounce Resolved] Sending task ${update.taskId} to Spring Boot...`);
+        console.log(`[Debounce Resolved] Sending tasks to Spring Boot...`);
 		
 		const current = this._localTasks() ?? [];
-        const taskMatch = current.find(t => t.id === update.taskId);
+		const batchPayload: { id: number; status: string; position: number }[] = [];
+		const statuses: ('TODO' | 'PROGRESS' | 'REVIEW' | 'DONE')[] = ['TODO', 'PROGRESS', 'REVIEW', 'DONE'];
 		
-		const payload = {
-          title: update.title,
-	  	  description: update.description,
-          status: update.newStatus,
-        };
+		statuses.forEach((laneStatus) => {
+			const laneTasks = current.filter(t => t.status === laneStatus);
+			laneTasks.forEach((task, index) => {
+				batchPayload.push({
+					id: task.id,
+					status: task.status,
+					position: index
+				});
+			});
+		});
 
-		return this.http.put<Task>(`${this.apiUrl}/${update.taskId}`, payload).pipe(
+		return this.http.put<void>(`${this.apiUrl}`, batchPayload).pipe(
           catchError((err) => {
             console.error('Failed to sync with Postgres via Spring Boot:', err);
             // Return EMPTY so the master subscription channel doesn't terminate on network failure
@@ -77,21 +83,6 @@ export class KanbanService {
 		},
 		error: (err) => console.error('Failed to lazy-load description:', err)
 	});
-  }
-
-  /**
-   * ➕ POST: Create a new task
-   */
-  createTask(title: string) {
-    const payload = { title, status: 'TODO' };
-    
-    this.http.post<Task>(this.apiUrl, payload).subscribe({
-      next: (newTask) => {
-        const current = this._localTasks() ?? [];
-        this._localTasks.set([...current, newTask]);
-      },
-      error: (err) => console.error('Failed to create task:', err)
-    });
   }
 
   /**
@@ -142,7 +133,7 @@ export class KanbanService {
 
     // Push the intended update into the debounced stream; actual network call
     // will be made by initializeDebouncedStream after debounceTime.
-    this.statusUpdateStream.next({ taskId, title: updatedTask.title, newStatus, description: updatedTask.description });
+    this.statusUpdateStream.next({});
   }
 
   /**

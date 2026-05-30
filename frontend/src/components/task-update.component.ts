@@ -13,8 +13,10 @@ import { Component, input, output } from "@angular/core";
 			<label for="description" >Description: </label>
 			<textarea id="description" name="description" required [value]="description() ?? ''" placeholder="Task description"></textarea>
 			
-			<button type="submit">Create</button>
-			<button (click)="close.emit()">Cancel</button>
+			<div class="flex flex-col gap-1">
+				<button type="submit" class="text-background bg-primary btn-primary rounded-md" >{{ method() === "POST" ? "Create" : "Update" }}</button>
+				<button class="text-background bg-primary btn-primary rounded-md" (click)="close.emit()">Cancel</button>
+			</div>
 		</form>
 			`
 
@@ -33,10 +35,21 @@ export default class TaskUpdate {
 		const form = event.target as HTMLFormElement;
         const formData = new FormData(form);
 
-		const payload = {
-			title: formData.get('title') as string,
-			description: formData.get('description') as string,
-			status: this.method() === 'POST' ? 'TODO' : this.status()
+		let payload;
+
+		if (this.method() === 'POST') {
+			payload = {
+				title: formData.get('title') as string,
+				description: formData.get('description') as string,
+			}
+		}
+
+		else {
+			payload = {
+				title: formData.get('title') as string,
+				description: formData.get('description') as string,
+				status: this.status()
+			}
 		}
 		const url = this.method() === 'POST'
 		? 'http://localhost:8080/api/tasks'

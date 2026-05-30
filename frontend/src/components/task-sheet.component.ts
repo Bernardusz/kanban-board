@@ -11,9 +11,9 @@ import { Component, input, output, signal } from "@angular/core";
 		<div class="flex flex-col gap-4 w-full">
 			<div class="flex items-center justify-between gap-4">
 				<h2 class="text-3xl font-bold">
-					Task no - {{id()}}
+					{{ title() }}
 				</h2>
-				<button (click)="toggleEdit()" class="btn-primary bg-primary">
+				<button (click)="toggleEdit()" class="btn-primary rounded-xl p-2 bg-primary text-background">
 					{{ isEdit() ? 'View Details' : 'Edit Task' }}
 				</button>
 			</div>

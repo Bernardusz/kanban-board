@@ -7,6 +7,7 @@ public record Task(
   String title,
   String description,
   TaskStatus status,
+  Integer position,
   LocalDateTime createdAt,
   LocalDateTime updatedAt
 ) {}

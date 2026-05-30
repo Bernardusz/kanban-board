@@ -14,7 +14,7 @@ import { Component, input, output } from "@angular/core";
 			
 			<p id="status">Status: {{ status() }}</p>
 
-			<button (click)="close.emit()" >Close</button>
+			<button class="text-background bg-primary btn-primary rounded-md" (click)="close.emit()">Cancel</button>
 		</div>
 			`
 })

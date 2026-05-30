@@ -1,10 +1,10 @@
 package io.github.bernardusz.kanban_board.kanban;
 
 import io.github.bernardusz.kanban_board.kanban.dto.TaskCreateRequest;
+import io.github.bernardusz.kanban_board.kanban.dto.TaskSingularUpdate;
 import io.github.bernardusz.kanban_board.kanban.dto.TaskSummary;
-import org.springframework.http.HttpStatus;
+import io.github.bernardusz.kanban_board.kanban.dto.TaskBatchUpdate;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -47,8 +47,14 @@ public class TaskController {
       .orElse(ResponseEntity.internalServerError().build());
   }
 
+  @PutMapping
+  public ResponseEntity<Void> update(@RequestBody List<TaskBatchUpdate> task) {
+    taskService.updateTasks(task);
+    return ResponseEntity.ok().build();
+  }
+
   @PutMapping("/{id}")
-  public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody TaskCreateRequest task) {
+  public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody TaskSingularUpdate task) {
     taskService.updateTask(task, id);
     return ResponseEntity.ok().build();
   }

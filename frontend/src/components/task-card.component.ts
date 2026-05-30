@@ -9,7 +9,7 @@ import { Component, input, output } from "@angular/core";
         class: 'block w-full cursor-grab active:cursor-grabbing'
     },
 	template: `
-		<div class="flex flex-col gap-2 border border-foreground-tertiary p-4 border-l-4 border-l-primary active:cursor-grabbing">
+		<div class="flex flex-col gap-2 border border-foreground-tertiary p-4 border-l-4 border-l-primary active:cursor-grabbing rounded-2xl">
 			<div class="flex justify-between">
 				<button (click)="editTask.emit({ id: id(), title: title(), description: description(), status: status(), createdAt: createdAt(), updatedAt: updatedAt() })">
 					<h3>{{ title() }}</h3>
