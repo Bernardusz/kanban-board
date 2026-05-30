@@ -3,7 +3,8 @@ import type { PageServerLoad } from '@analogjs/router';
 export interface Task {
   id: number;
   title: string;
-  status: 'TODO' | 'IN_PROGRESS' | 'REVIEW' | 'DONE';
+  description: string;
+  status: 'TODO' | 'PROGRESS' | 'REVIEW' | 'DONE';
   createdAt: string;
   updatedAt: string;
 }

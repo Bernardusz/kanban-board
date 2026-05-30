@@ -12,11 +12,12 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { load, Task } from '@/app/pages/(home)/index.server';
 import { KanbanService } from '@/app/pages/(home)/index.service';
 import TaskContainer from '@/components/task-container.component';
+import TaskUpdate from '@/components/task-update.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CdkDropListGroup, TaskContainer],
+  imports: [CdkDropListGroup, TaskContainer, TaskUpdate],
   templateUrl: './index.page.html',
 })
 export default class Home {
@@ -36,7 +37,7 @@ export default class Home {
 		return this.tasksSignal().filter((task) => task.status === 'TODO');
 	});
 	inProgressTasks = computed(() => {
-		return this.tasksSignal().filter((task) => task.status === 'IN_PROGRESS');
+		return this.tasksSignal().filter((task) => task.status === 'PROGRESS');
 	});
 	reviewTasks = computed(() => {
 		return this.tasksSignal().filter((task) => task.status === 'REVIEW');
@@ -54,6 +55,21 @@ export default class Home {
     closeCreateModal() {
         this.isModalOpen.set(false);
     }
+
+	selectedTask = signal<Task | true | null>(null);
+
+	// Update your modal triggers
+	openEditModal(task: Task) {
+		this.selectedTask.set(task);
+	}
+
+	openCreationModal(){
+		this.selectedTask.set(true);
+	}
+
+	closeEditModal() {
+		this.selectedTask.set(null);
+	}
 
 	onCardDropped(event: CdkDragDrop<any[]>) {
 		const movedTask = event.previousContainer.data[event.previousIndex];

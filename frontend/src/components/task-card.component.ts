@@ -1,5 +1,5 @@
 import { Task } from "@/app/pages/(home)/index.server";
-import { Component, input } from "@angular/core";
+import { Component, input, output } from "@angular/core";
 
 @Component({
 	selector: 'task-card',
@@ -10,7 +10,11 @@ import { Component, input } from "@angular/core";
     },
 	template: `
 		<div class="flex flex-col gap-2 border border-foreground-tertiary p-4 border-l-4 border-l-primary active:cursor-grabbing">
-			<h3>{{ title() }}</h3>
+			<div class="flex justify-between">
+				<h3>{{ title() }}</h3>
+				<button (click)="deleteTask.emit(id())" class="btn-primary rounded-xl bg-red-500 hover:bg-red-600 active:bg-red-700">Delete</button>
+			</div>	
+		
 			<p class="p-deemphasize">Status: {{ status() }}</p>
 			<div class="flex justify-between">
 				<p class="p-deemphasize">Created at: {{ createdAt() }}</p>
@@ -25,4 +29,5 @@ export default class TaskCard {
 	status = input.required<Task['status']>();
 	createdAt = input.required<string>();
 	updatedAt = input.required<string>();
+	deleteTask = output<number>();
 }

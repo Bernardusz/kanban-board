@@ -9,13 +9,18 @@
 			[tasks]="todoTasks()"
 			[isAddTaskAllowed]="true"
 			(dropped)="onCardDropped($event)"
+			(addTask)="openCreationModal()"
+			(deleteTask)="triggerDeleteTask($event)"
+			(editTask)="openEditModal($event)"
 		/>
 		<task-container
 			title="In Progress"
-			id="IN_PROGRESS"
+			id="PROGRESS"
 			[tasks]="inProgressTasks()"
 			[isAddTaskAllowed]="false"
 			(dropped)="onCardDropped($event)"
+			(deleteTask)="triggerDeleteTask($event)"
+			(editTask)="openEditModal($event)"
 		/>
 		<task-container
 			title="To Review"
@@ -23,6 +28,8 @@
 			[tasks]="reviewTasks()"
 			[isAddTaskAllowed]="false"
 			(dropped)="onCardDropped($event)"
+			(deleteTask)="triggerDeleteTask($event)"
+			(editTask)="openEditModal($event)"
 		/>
 		<task-container
 			title="Finished"
@@ -30,6 +37,27 @@
 			[tasks]="doneTasks()"
 			[isAddTaskAllowed]="false"
 			(dropped)="onCardDropped($event)"
+			(deleteTask)="triggerDeleteTask($event)"
+			(editTask)="openEditModal($event)"
 		/>
+
+		@let currentTask = selectedTask();
+
+		@if (currentTask === true){
+			<task-update method="POST"/>
+		}
+		@else if (currentTask !== null) {
+			<task-update
+				[id]="currentTask.id"
+				[title]="currentTask.title"
+				[description]="currentTask.description"
+				method="PUT"
+				[status]="currentTask.status"
+			/>
+			<button (click)="closeEditModal()" class="btn-primary">
+				Cancel
+			</button>
+		}
+
 	</section>
 </main>

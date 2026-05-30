@@ -16,7 +16,7 @@ export class KanbanService {
   // Public signal for your component to read
   localTasks = this._localTasks.asReadonly();
 
-  private statusUpdateStream = new Subject<{ taskId: number; title: string; newStatus: Task['status'] }>();
+  private statusUpdateStream = new Subject<{ taskId: number; title: string; newStatus: Task['status'], description: string }>();
 
   constructor () {
 	this.initializeDebouncedStream();
@@ -37,6 +37,7 @@ export class KanbanService {
 		
 		const payload = {
           title: update.title,
+	  	  description: update.description,
           status: update.newStatus,
           createdAt: taskMatch?.createdAt ?? new Date().toISOString(),
           updatedAt: new Date().toISOString() // Let the frontend reflect the update time stamp
@@ -129,7 +130,7 @@ export class KanbanService {
 
     // Push the intended update into the debounced stream; actual network call
     // will be made by initializeDebouncedStream after debounceTime.
-    this.statusUpdateStream.next({ taskId, title: updatedTask.title, newStatus });
+    this.statusUpdateStream.next({ taskId, title: updatedTask.title, newStatus, description: updatedTask.description });
   }
 
   /**
