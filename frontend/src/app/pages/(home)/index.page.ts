@@ -14,12 +14,11 @@ import { KanbanService } from '@/app/pages/(home)/index.service';
 import TaskContainer from '@/components/task-container.component';
 import TaskUpdate from '@/components/task-update.component';
 import TaskSheet from '@/components/task-sheet.component';
-import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CdkDropListGroup, TaskContainer, TaskSheet, TaskUpdate, JsonPipe],
+  imports: [CdkDropListGroup, TaskContainer, TaskSheet, TaskUpdate],
   templateUrl: './index.page.html',
 })
 export default class Home {
