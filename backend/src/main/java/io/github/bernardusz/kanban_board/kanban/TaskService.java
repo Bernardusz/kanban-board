@@ -32,7 +32,7 @@ public class TaskService {
   }
 
   @Transactional
-  public void updateTask(Task task, Long id) {
+  public void updateTask(TaskCreateRequest task, Long id) {
     taskRepository.update(task, id);
   }
 

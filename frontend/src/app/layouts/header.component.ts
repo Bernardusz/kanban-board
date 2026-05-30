@@ -4,7 +4,7 @@ import { Component } from "@angular/core";
 	standalone: true,
 	selector: 'app-header',
 	template:`
-		<header class="flex flex-col justify-between align-middle p-4 text-primary">
+		<header class="z-40 flex flex-col justify-between align-middle p-4 text-primary">
 			<h1>Kanban Board</h1>
 		</header>
 	`

@@ -9,15 +9,17 @@ import {
 } from '@angular/cdk/drag-drop';
 import { injectLoad } from '@analogjs/router';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { load, Task } from '@/app/pages/(home)/index.server';
+import { load, type Task, TaskSummary } from '@/app/pages/(home)/index.server';
 import { KanbanService } from '@/app/pages/(home)/index.service';
 import TaskContainer from '@/components/task-container.component';
 import TaskUpdate from '@/components/task-update.component';
+import TaskSheet from '@/components/task-sheet.component';
+import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CdkDropListGroup, TaskContainer, TaskUpdate],
+  imports: [CdkDropListGroup, TaskContainer, TaskSheet, TaskUpdate, JsonPipe],
   templateUrl: './index.page.html',
 })
 export default class Home {
@@ -56,11 +58,11 @@ export default class Home {
         this.isModalOpen.set(false);
     }
 
-	selectedTask = signal<Task | true | null>(null);
+	selectedTask = signal<TaskSummary | true | null | Task>(null);
 
 	// Update your modal triggers
-	openEditModal(task: Task) {
-		this.selectedTask.set(task);
+	openEditModal(task: TaskSummary) {
+		this.kanbanService.getTask(task.id, this.selectedTask)
 	}
 
 	openCreationModal(){

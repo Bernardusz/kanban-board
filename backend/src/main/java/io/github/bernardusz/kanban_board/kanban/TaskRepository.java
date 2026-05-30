@@ -34,9 +34,9 @@ public class TaskRepository {
       .params(task.title(), task.description(), task.status().name()).query(Long.class).optional();
   }
 
-  public void update(Task task, Long id) {
-    jdbcClient.sql("UPDATE tasks SET title = ?, description = ?, status = ?, created_at = ?, updated_at = ? WHERE id = ?")
-      .params(task.title(), task.description(), task.status().name(), task.createdAt(), task.updatedAt(), id).update();
+  public void update(TaskCreateRequest task, Long id) {
+    jdbcClient.sql("UPDATE tasks SET title = ?, description = ?, status = ? WHERE id = ?")
+      .params(task.title(), task.description(), task.status().name(), id).update();
   }
 
   public void delete(Long id) {

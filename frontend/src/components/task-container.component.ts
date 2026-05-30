@@ -1,4 +1,4 @@
-import { Task } from "@/app/pages/(home)/index.server";
+import { Task, TaskSummary } from "@/app/pages/(home)/index.server";
 import TaskCard from "@/components/task-card.component";
 import { CdkDrag, CdkDropList, CdkDragDrop } from "@angular/cdk/drag-drop";
 import { DatePipe } from "@angular/common";
@@ -19,7 +19,7 @@ import { Component, input, output } from "@angular/core";
 				[id]="id()"
 				[cdkDropListData]="tasks()"
 				(cdkDropListDropped)="dropped.emit($any($event))"
-				class="rounded-2xl flex flex-col gap-2 p-2"
+				class="rounded-2xl flex flex-col gap-2 p-2 h-full"
 			>
 				@for (task of tasks(); track task.id) {
 					<task-card
@@ -28,7 +28,9 @@ import { Component, input, output } from "@angular/core";
 						[status]="task.status"
 						[createdAt]="(task.createdAt | date:'dd-MM-yyyy') ?? ''"
 						[updatedAt]="(task.updatedAt | date:'dd-MM-yyyy') ?? ''"
+						[description]="task.description"
 						(deleteTask)="deleteTask.emit($event)"
+						(editTask)="editTask.emit($event)"
 					/>
 				}
 				@empty {
@@ -50,5 +52,6 @@ export default class TaskContainer {
 	isAddTaskAllowed = input<boolean>();
 	dropped = output<CdkDragDrop<Task[]>>();
 	addTask = output<void>();
+	editTask = output<Task>();
 	deleteTask = output<number>();
 }

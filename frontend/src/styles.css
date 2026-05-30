@@ -7,6 +7,9 @@
 @theme inline {
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);
+	--color-foreground-secondary: var(--foreground-secondary);
+	--color-foreground-tertiary: var(--foreground-tertiary);
+
 	--font-main: "Inter";
 	--color-primary: var(--primary);
 	--color-secondary: var(--secondary);
@@ -63,6 +66,10 @@
     p {
         @apply text-base font-normal;
     }
+	input, textarea{
+		@apply px-2
+	}
+
 }
 
 @layer components {

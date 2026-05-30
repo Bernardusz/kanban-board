@@ -1,10 +1,11 @@
-import { Component, input } from "@angular/core";
+import { Task } from "@/app/pages/(home)/index.server";
+import { Component, input, output } from "@angular/core";
 
 @Component({
 	selector: "task-update",
 	standalone: true,
 	template: `
-		<form class="flex flex-col gap-4 border-primary border p-4" 
+		<form class="flex flex-col gap-4 border-primary border p-4 rounded-2xl" 
 			(submit)="handleSubmit($event)">
 			<label for="title">Title: </label >
 			<input type="text" id="title" name="title" required [value]="title() ?? ''" placeholder="Input the title..." />
@@ -13,6 +14,7 @@ import { Component, input } from "@angular/core";
 			<textarea id="description" name="description" required [value]="description() ?? ''" placeholder="Task description"></textarea>
 			
 			<button type="submit">Create</button>
+			<button (click)="close.emit()">Cancel</button>
 		</form>
 			`
 
@@ -22,7 +24,8 @@ export default class TaskUpdate {
 	id = input<number>();
 	title = input<string>();
 	description = input<string>();
-	status = input<'TODO' | 'PROGRESS' | 'REVIEW' | 'DONE'>();
+	status = input<Task['status']>();
+	close = output<void>();
 
 	async handleSubmit(event: Event) {
 		event.preventDefault();
@@ -33,7 +36,7 @@ export default class TaskUpdate {
 		const payload = {
 			title: formData.get('title') as string,
 			description: formData.get('description') as string,
-			status: this.method() === 'POST' ? 'TODO' : this.status
+			status: this.method() === 'POST' ? 'TODO' : this.status()
 		}
 		const url = this.method() === 'POST'
 		? 'http://localhost:8080/api/tasks'

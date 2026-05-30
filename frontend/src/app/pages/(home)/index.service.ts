@@ -1,6 +1,6 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable, WritableSignal, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Task } from './index.server';
+import { Task, TaskSummary } from './index.server';
 import { catchError, debounceTime, EMPTY, Subject, switchMap } from 'rxjs';
 
 @Injectable({
@@ -10,6 +10,8 @@ export class KanbanService {
   private http = inject(HttpClient);
   private apiUrl = 'http://localhost:8080/api/tasks';
 
+
+  
   // Local client-side tracking state (starts as null, falls back to server data)
   private _localTasks = signal<Task[] | null>(null);
   
@@ -39,8 +41,6 @@ export class KanbanService {
           title: update.title,
 	  	  description: update.description,
           status: update.newStatus,
-          createdAt: taskMatch?.createdAt ?? new Date().toISOString(),
-          updatedAt: new Date().toISOString() // Let the frontend reflect the update time stamp
         };
 
 		return this.http.put<Task>(`${this.apiUrl}/${update.taskId}`, payload).pipe(
@@ -55,7 +55,7 @@ export class KanbanService {
 	  
 
     ).subscribe({
-      next: (updatedTask) => console.log('Successfully synced with Postgres via Spring Boot!'),
+      next: () => console.log('Successfully synced with Postgres via Spring Boot!'),
       error: (err) => console.error('Friction syncing state:', err)
     });
   }
@@ -65,6 +65,18 @@ export class KanbanService {
     if (this._localTasks() === null) {
       this._localTasks.set(serverTasks);
     }
+  }
+
+  /**
+   * 📡 GET: Get a specific task
+   */
+  getTask(id: number, signal: WritableSignal<TaskSummary | true | null | Task>) {
+	return this.http.get<Task>(`${this.apiUrl}/${id}`).subscribe({
+		next: (task) => {
+			signal.set(task);
+		},
+		error: (err) => console.error('Failed to lazy-load description:', err)
+	});
   }
 
   /**

@@ -9,6 +9,13 @@ export interface Task {
   updatedAt: string;
 }
 
+export interface TaskSummary {
+  id: number;
+  title: string;
+  description: string;
+  status: 'TODO' | 'PROGRESS' | 'REVIEW' | 'DONE';	
+}
+
 export const load = async ({ fetch }: PageServerLoad) => {
   const backendUrl = 'http://localhost:8080/api/tasks';
 
