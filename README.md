@@ -12,7 +12,7 @@
 Force a 2-second delay in Frontend, not SQL, service (Debouncing). I worded that one wrong 🐧💀
 
 ## 🌟 Goal
-A public wall where users can post messages.
+A public kanban board
 
 ## ❓ Why
 Bridge the gap between Java 21 performance and Analog.js data fetching
